@@ -11,7 +11,7 @@ module.exports = (env, argv) => {
     },
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: isProduction ? 'app.[contenthash].js' : 'app.js',
+      filename: 'app.js',
       assetModuleFilename: 'img/[name][ext]'
     },
     resolve: {
@@ -54,7 +54,7 @@ module.exports = (env, argv) => {
     plugins: [
       new CleanWebpackPlugin(),
       new MiniCssExtractPlugin({
-        filename: isProduction ? 'app.[contenthash].css' : 'app.css'
+        filename: 'app.css'
       })
     ],
     devtool: isProduction ? false : 'source-map',
