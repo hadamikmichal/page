@@ -1,7 +1,5 @@
-import 'bootstrap';
-
-import { pricingPage } from './parts/page';
+import { contactPage } from './parts/page';
 
 document.addEventListener('DOMContentLoaded', function() {
-    pricingPage();
+    contactPage();
 }); 

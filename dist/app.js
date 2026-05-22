@@ -2,201 +2,122 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./assets/js/parts/pricing_page.js":
-/*!*****************************************!*\
-  !*** ./assets/js/parts/pricing_page.js ***!
-  \*****************************************/
+/***/ "./assets/js/parts/page.js":
+/*!*********************************!*\
+  !*** ./assets/js/parts/page.js ***!
+  \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   pricingPage: () => (/* binding */ pricingPage)
+/* harmony export */   contactPage: () => (/* binding */ contactPage)
 /* harmony export */ });
-const pricingPage = () => {
-    const pricingSection = document.querySelector('.pricing-section');
+/* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
 
-    if (!pricingSection) {
+
+function contactPage() {
+    const modalElement = document.querySelector('#contact-modal');
+    const form = document.querySelector('#contact-form');
+    const successMessage = document.querySelector('#form-success');
+
+    if (!modalElement || !form || !successMessage) {
         return;
     }
 
-    const rangeInput = pricingSection.querySelector('.form-range');
-    const rangeLabel = rangeInput ? pricingSection.querySelector(`label[for="${rangeInput.id}"]`) : null;
-    const counter = pricingSection.querySelector('#counter');
-    const mandatoryInputs = pricingSection.querySelectorAll('.box-prices__mandatory input[type="checkbox"]');
-    const optionalInputs = pricingSection.querySelectorAll('.box-prices__optional input[type="checkbox"]');
-    const summaryRows = pricingSection.querySelectorAll('.card__counts p, .card__counts small');
-    const submitButton = pricingSection.querySelector('.btn');
-    const optionalPrices = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7];
-    const mandatoryPrice = 1;
-    const vatMultiplier = 1.23;
+    const contactModal = bootstrap__WEBPACK_IMPORTED_MODULE_0__.Modal.getOrCreateInstance(modalElement);
 
-    if (!rangeInput || !counter) {
-        return;
+    const fields = {
+        fullName: {
+            input: form.elements.fullName,
+            error: document.querySelector('#full-name-error'),
+            validate: value => value.trim().length > 1,
+            message: 'Podaj imię i nazwisko.'
+        },
+        email: {
+            input: form.elements.email,
+            error: document.querySelector('#email-error'),
+            validate: value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()),
+            message: 'Podaj poprawny adres e-mail.'
+        },
+        subject: {
+            input: form.elements.subject,
+            error: document.querySelector('#subject-error'),
+            validate: value => value !== '',
+            message: 'Wybierz temat zapytania.'
+        },
+        message: {
+            input: form.elements.message,
+            error: document.querySelector('#message-error'),
+            validate: value => value.trim().length >= 10,
+            message: 'Wiadomość powinna mieć co najmniej 10 znaków.'
+        },
+        consent: {
+            input: form.elements.consent,
+            error: document.querySelector('#consent-error'),
+            validate: () => form.elements.consent.checked,
+            message: 'Zgoda jest wymagana do wysłania formularza.'
+        }
+    };
+
+    function setFieldError(field, message = '') {
+        field.error.textContent = message;
+        field.input.classList.toggle('is-invalid', Boolean(message));
+        field.input.setAttribute('aria-invalid', message ? 'true' : 'false');
     }
 
-    const formatPrice = (price) => {
-        return `${price.toLocaleString('pl-PL', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        })} zł`;
-    };
+    function resetFeedback() {
+        successMessage.hidden = true;
+        form.classList.remove('was-validated');
+        Object.values(fields).forEach(field => setFieldError(field));
+    }
 
-    const getCounterValue = () => {
-        return 'value' in counter ? counter.value : counter.textContent.trim();
-    };
+    function validateForm() {
+        let firstInvalidField = null;
 
-    const getStudentsCount = (valueToParse = rangeInput.value) => {
-        const value = Number.parseInt(valueToParse, 10);
-        const min = Number.parseInt(rangeInput.min, 10);
-        const max = Number.parseInt(rangeInput.max, 10);
+        Object.values(fields).forEach(field => {
+            const isValid = field.validate(field.input.value);
+            setFieldError(field, isValid ? '' : field.message);
 
-        if (Number.isNaN(value)) {
-            return min;
-        }
-
-        return Math.min(Math.max(value, min), max);
-    };
-
-    const updateCounter = (studentsCount) => {
-        if ('value' in counter) {
-            counter.value = studentsCount;
-        } else {
-            counter.textContent = studentsCount;
-        }
-    };
-
-    const updateSummaryRow = (label, value) => {
-        const row = Array.from(summaryRows).find((summaryRow) => {
-            return summaryRow.textContent.trim().startsWith(label);
+            if (!isValid && !firstInvalidField) {
+                firstInvalidField = field.input;
+            }
         });
 
-        if (!row) {
+        if (firstInvalidField) {
+            firstInvalidField.focus();
+            return false;
+        }
+
+        return true;
+    }
+
+    modalElement.addEventListener('shown.bs.modal', () => {
+        resetFeedback();
+        form.elements.fullName.focus();
+    });
+
+    modalElement.addEventListener('hidden.bs.modal', () => {
+        form.reset();
+        resetFeedback();
+    });
+
+    form.addEventListener('submit', event => {
+        event.preventDefault();
+        successMessage.hidden = true;
+        form.classList.add('was-validated');
+
+        if (!validateForm()) {
             return;
         }
 
-        const valueElement = row.querySelector('span');
+        form.reset();
+        resetFeedback();
+        successMessage.hidden = false;
+        successMessage.focus({ preventScroll: true });
 
-        if (valueElement) {
-            valueElement.textContent = value;
-        }
-    };
-
-    const updateRangeLabel = (studentsCount) => {
-        if (!rangeLabel) {
-            return;
-        }
-
-        const min = Number.parseInt(rangeInput.min, 10);
-        const max = Number.parseInt(rangeInput.max, 10);
-        const percent = max === min ? 0 : ((studentsCount - min) / (max - min)) * 100;
-        const thumbOffset = 10 - (percent * 0.2);
-
-        rangeLabel.textContent = studentsCount.toLocaleString('pl-PL');
-        rangeLabel.style.left = `calc(${percent}% + ${thumbOffset}px)`;
-    };
-
-    const getInputLabel = (input) => {
-        return input.closest('.form-check')?.querySelector('.form-check-label')?.textContent.trim() || '';
-    };
-
-    const getSelectedModules = () => {
-        return Array.from([...mandatoryInputs, ...optionalInputs])
-            .filter((input) => input.checked)
-            .map(getInputLabel)
-            .filter(Boolean);
-    };
-
-    const calculatePricePerStudent = () => {
-        const mandatoryTotal = mandatoryInputs.length * mandatoryPrice;
-        const optionalTotal = Array.from(optionalInputs).reduce((total, input, index) => {
-            return input.checked ? total + (optionalPrices[index] || 0) : total;
-        }, 0);
-
-        return mandatoryTotal + optionalTotal;
-    };
-
-    const getPriceSummary = () => {
-        const studentsCount = getStudentsCount();
-        const pricePerStudent = calculatePricePerStudent();
-        const monthlyNet = pricePerStudent * studentsCount;
-        const monthlyGross = monthlyNet * vatMultiplier;
-
-        return {
-            studentsCount,
-            pricePerStudent,
-            monthlyNet,
-            monthlyGross,
-        };
-    };
-
-    const updatePrices = () => {
-        const {
-            studentsCount,
-            pricePerStudent,
-            monthlyNet,
-            monthlyGross,
-        } = getPriceSummary();
-
-        rangeInput.value = studentsCount;
-        updateCounter(studentsCount);
-        updateRangeLabel(studentsCount);
-        updateSummaryRow('Liczba słuchaczy:', studentsCount.toLocaleString('pl-PL'));
-        updateSummaryRow('Miesięczna cena za słuchacza:', formatPrice(pricePerStudent));
-        updateSummaryRow('Miesięczny koszt brutto:', formatPrice(monthlyGross));
-        updateSummaryRow('Miesięczny koszt netto:', formatPrice(monthlyNet));
-    };
-
-    rangeInput.min = rangeInput.min || '1';
-    rangeInput.max = rangeInput.max || '1000';
-    rangeInput.step = rangeInput.step || '1';
-    rangeInput.value = getCounterValue() || rangeInput.value;
-
-    mandatoryInputs.forEach((input) => {
-        input.checked = true;
-        input.disabled = true;
-        input.setAttribute('aria-disabled', 'true');
+        contactModal.handleUpdate();
     });
-
-    rangeInput.addEventListener('input', updatePrices);
-
-    if ('value' in counter) {
-        counter.addEventListener('input', () => {
-            rangeInput.value = getStudentsCount(counter.value);
-            updatePrices();
-        });
-    }
-
-    optionalInputs.forEach((input) => {
-        input.addEventListener('change', updatePrices);
-    });
-
-    if (submitButton) {
-        submitButton.addEventListener('click', (event) => {
-            event.preventDefault();
-
-            const {
-                studentsCount,
-                pricePerStudent,
-                monthlyNet,
-                monthlyGross,
-            } = getPriceSummary();
-            const selectedModules = getSelectedModules();
-
-            alert([
-                'Wybrane dane:',
-                `Moduły: ${selectedModules.join(', ')}`,
-                `Liczba słuchaczy: ${studentsCount.toLocaleString('pl-PL')}`,
-                `Miesięczna cena za słuchacza: ${formatPrice(pricePerStudent)}`,
-                `Miesięczny koszt netto: ${formatPrice(monthlyNet)}`,
-                `Miesięczny koszt brutto: ${formatPrice(monthlyGross)}`,
-            ].join('\n'));
-        });
-    }
-
-    updatePrices();
-};
-
-
+}
 
 
 /***/ }),
@@ -7695,15 +7616,13 @@ var __webpack_exports__ = {};
   !*** ./assets/js/app.js ***!
   \**************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
-/* harmony import */ var _parts_pricing_page__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./parts/pricing_page */ "./assets/js/parts/pricing_page.js");
-
-
+/* harmony import */ var _parts_page__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./parts/page */ "./assets/js/parts/page.js");
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    (0,_parts_pricing_page__WEBPACK_IMPORTED_MODULE_1__.pricingPage)();
+    (0,_parts_page__WEBPACK_IMPORTED_MODULE_0__.contactPage)();
 }); 
+
 })();
 
 // This entry needs to be wrapped in an IIFE because it needs to be isolated against other entry modules.
