@@ -1,35 +1,148 @@
 <!DOCTYPE html>
 <html lang="pl">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Zadanie rekrutacyjne - IBE PIB</title>
-        <meta name="description" content="Robots noindex">
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>WebPomoc - formularz zapytania ofertowego</title>
+        <meta name="description" content="Strona kontaktowa firmy WebPomoc z dostepnym formularzem zapytania ofertowego.">
         <meta name="robots" content="noindex">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
         <link rel="stylesheet" href="dist/app.css">
         <script src="dist/app.js" defer></script>
     </head>
 
     <body>
-        <main>
-            <section class="hero-section">
-                <div class="container">
-                </div>
-            </section>
-            
+        <a class="skip-link" href="#main-content">Przejdź do treści głównej</a>
 
-            <!-- Pricing section START -->
-            <section class="pricing-section">
-                <div class="container cards__wrapper">
+        <header class="site-header py-3" aria-label="Nagłówek strony">
+            <div class="container">
+                <a class="navbar-brand site-header__brand" href="index.html" aria-label="WebPomoc, strona główna">
+                    WebPomoc
+                </a>
+            </div>
+        </header>
+
+        <main id="main-content" class="site-main">
+            <section class="hero d-flex align-items-center" aria-labelledby="hero-title">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-12 text-center text-sm-start text-md-center">
+                            <p class="hero__eyebrow mb-2">Doradztwo edukacyjne i techniczne</p>
+                            <h1 id="hero-title" class="hero__title mb-3">
+                                Projektujemy skuteczne programy szkoleniowe.
+                            </h1>
+                            <p class="hero__description mx-md-auto mb-4">
+                                Analizujemy potrzeby, przygotowujemy strategie rozwoju kompetencji i wspieramy zespoły w mierzeniu efektów nauki.
+                            </p>
+                            <button class="btn btn-primary btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#contact-modal">
+                                Wyślij zapytanie
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </section>
-            <!-- Pricing section END -->
         </main>
+
+        <div class="modal fade" id="contact-modal" tabindex="-1" aria-describedby="modal-description">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header align-items-start">
+                        <div>
+                            <h2 id="modal-title" class="modal-title">Zapytanie ofertowe</h2>
+                            <p id="modal-description" class="modal-description mb-0">
+                                Wypełnij formularz, a skontaktujemy się z Tobą w sprawie oferty.
+                            </p>
+                        </div>
+                        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Zamknij formularz"></button>
+                    </div>
+
+                    <form class="contact-form" id="contact-form" novalidate>
+                        <div class="modal-body">
+                            <div class="alert alert-success fw-semibold" id="form-success" role="status" aria-live="polite" tabindex="-1" hidden>
+                                Zapytanie zostało wysłane.
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label fw-bold" for="full-name">
+                                        Imię i nazwisko 
+                                        <span aria-hidden="true">*</span>
+                                        <span class="visually-hidden">(pole wymagane)</span>
+                                    </label>
+                                    <input class="form-control" id="full-name" name="fullName" type="text" autocomplete="name" required aria-describedby="full-name-error">
+                                    <div class="invalid-feedback" id="full-name-error" aria-live="polite"></div>
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label fw-bold" for="email">
+                                        Adres e-mail 
+                                        <span aria-hidden="true">*</span>
+                                        <span class="visually-hidden">(pole wymagane)</span>
+                                    </label>
+                                    <input class="form-control" id="email" name="email" type="email" autocomplete="email" required aria-describedby="email-error">
+                                    <div class="invalid-feedback" id="email-error" aria-live="polite"></div>
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label fw-bold" for="phone">Numer telefonu</label>
+                                    <input class="form-control" id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" aria-describedby="phone-help">
+                                    <div class="form-text" id="phone-help">Pole opcjonalne.</div>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label fw-bold" for="subject">Temat zapytania 
+                                        <span aria-hidden="true">*</span>
+                                        <span class="visually-hidden">(pole wymagane)</span>
+                                    </label>
+                                    <select class="form-select" id="subject" name="subject" required aria-describedby="subject-error">
+                                        <option value="">Wybierz temat</option>
+                                        <option value="analiza-potrzeb">Analiza potrzeb szkoleniowych</option>
+                                        <option value="program-rozwojowy">Program rozwojowy dla zespolu</option>
+                                        <option value="ewaluacja">Ewaluacja efektow nauki</option>
+                                    </select>
+                                    <div class="invalid-feedback" id="subject-error" aria-live="polite"></div>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label fw-bold" for="message">
+                                        Treść wiadomości 
+                                        <span aria-hidden="true">*</span>
+                                        <span class="visually-hidden">(pole wymagane)</span>
+                                    </label>
+                                    <textarea class="form-control" id="message" name="message" rows="5" required aria-describedby="message-error"></textarea>
+                                    <div class="invalid-feedback" id="message-error" aria-live="polite"></div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" id="consent" name="consent" type="checkbox" required aria-describedby="consent-error">
+                                        <label class="form-check-label fw-bold" for="consent">
+                                            Wyrażam zgodę na przetwarzanie danych w celu obsługi zapytania ofertowego.
+                                            <span class="visually-hidden">(pole wymagane)</span>
+                                        </label>
+                                        <div class="invalid-feedback" id="consent-error" aria-live="polite"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer flex-column-reverse flex-sm-row">
+                            <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Anuluj</button>
+                            <button class="btn btn-primary" type="submit">Wyślij formularz</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <footer class="site-footer">
+            <hr>
+            <p class="text-center">Copyright © 2026 WebPomoc</p>
+        </footer>
     </body>
 </html>
